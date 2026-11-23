@@ -1,0 +1,161 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+:root {
+    /* Deep Carbon-Slate Base (Less navy, sharper contrast) */
+    --bg-base: #090b10;
+    --bg-panel: #111520;
+
+    --text-primary: #f8fafc;
+    --text-secondary: #8a94a6;
+
+    --grid-boxes: #171c2b;
+    --grid-border: #252c40;
+
+    /* Upgraded Modern Accents */
+    --accent-blue: #3b82f6;
+    --accent-purple: #a855f7;
+    --accent-green: #14b8a6;
+
+    --side-hover: #14b8a624;
+    --side-hover-border: #14b8a6;
+
+    --error-crimson: #f43f5e;
+    --warning-amber: #fbbf24;
+}
+
+body.light {
+    --bg-base: #f4f6f9;
+    --bg-panel: #ffffff;
+
+    --text-primary: #0b0f19;
+    --text-secondary: #5b6476;
+
+    --grid-boxes: #edf1f7;
+    --grid-border: #dce2ec;
+
+    --accent-blue: #2563eb;
+    --accent-purple: #9333ea;
+    --accent-green: #0d9488;
+
+    --side-hover: #0d94881a;
+    --side-hover-border: #0d9488;
+
+    --error-crimson: #e11d48;
+    --warning-amber: #d97706;
+}
+::selection{
+    background-color: rgba(5, 107, 82, 0.985);
+    color: white;
+}
+::-webkit-scrollbar {
+  width: 10px;  /* Width of vertical scrollbar */
+  height: 10px; /* Height of horizontal scrollbar */
+}
+/* 2. The background track */
+::-webkit-scrollbar-track {
+  background: #d9d6d6;
+  border-radius: 5px;
+}
+
+/* 3. The draggable scroll thumb */
+::-webkit-scrollbar-thumb {
+  background: rgb(84, 3, 197);
+  border-radius: 5px;
+}
+
+/* 4. Hover effect on the thumb */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(139, 3, 197);
+}
+body{
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: Arial, Helvetica, sans-serif;
+}
+nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg-panel);
+    width: 100%;
+    height: 90px;
+    padding: 8px;
+}
+.sec-1, .sec-2{
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+.sec-1 > h3{
+    font-size: 30px;
+    color: var(--text-primary);
+}
+.searchbox{
+    border: 2px solid var(--text-secondary);
+    color: var(--text-primary);
+    border-radius: 50px;
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+    width: 250px;
+    height: 40px;
+}
+.searchbox.active{
+    border: 2px solid var(--accent-blue);
+}
+.searchbox > input{
+    background-color: transparent;
+    border: none;
+    color: var(--text-primary);
+}
+.searchbox > input:focus{
+    outline: none;
+    box-shadow: none;
+}
+.contents{
+    height: calc(100vh - 90px);
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+    grid-template-areas: "nav main stats";
+    gap: 10px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    transition: cubic-bezier(0.445, 0.05, 0.55, 0.95);
+}
+aside{
+    width: 100%;
+    height: calc(100vh - 100px);
+    background-color: var(--bg-panel);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 10px;
+    grid-area: nav;
+    overflow-y: auto;
+}
+aside ul{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 10px;
+}
+aside ul li{
+    list-style: none;
+    display: flex;
+    gap: 15px;
+    transition: 0.2s ease;
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid transparent;
+}
+aside ul li:hover{
+    background-color: var(--side-hover);
+    border: 2px solid var(--side-hover-border);
+}
