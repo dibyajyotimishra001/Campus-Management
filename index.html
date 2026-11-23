@@ -46,7 +46,7 @@
 
             <aside class="sidebar">
                 <ul>
-                    <li data-target="dahsboard">
+                    <li data-target="dashboard-page">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-columns-gap" viewBox="0 0 16 16">
                             <path
@@ -54,7 +54,7 @@
                         </svg>
                         <p>Dashboard</p>
                     </li>
-                    <li data-target="student">
+                    <li data-target="student-page">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-person" viewBox="0 0 16 16">
                             <path
@@ -62,7 +62,7 @@
                         </svg>
                         <p>Students</p>
                     </li>
-                    <li data-target="attendance">
+                    <li data-target="attendance-page">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-calendar" viewBox="0 0 16 16">
                             <path
@@ -70,7 +70,7 @@
                         </svg>
                         <p>Attendance</p>
                     </li>
-                    <li data-target="fee_payment">
+                    <li data-target="payment-page">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-wallet2" viewBox="0 0 16 16">
                             <path
@@ -78,7 +78,7 @@
                         </svg>
                         <p>Fee & Payment</p>
                     </li>
-                    <li data-target="hostelWarden">
+                    <li data-target="warden-page">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-building" viewBox="0 0 16 16">
                             <path
@@ -88,7 +88,7 @@
                         </svg>
                         <p>Warden</p>
                     </li>
-                    <li data-target="reports">
+                    <li data-target="report-page">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-flag" viewBox="0 0 16 16">
                             <path
@@ -98,6 +98,102 @@
                     </li>
                 </ul>
             </aside>
+
+            <!-- DASHBOARD PAGE -->
+            <div id="dashboard-page" class="page-view active-page">
+                <div class="dashboard-page-grid">
+                    <h2>Dashboard Configuration</h2>
+                </div>
+            </div>
+
+            <div id="student-page" class="page-view">
+                <div class="student-page-grid">
+                    <h2>Students</h2>
+                </div>
+            </div>
+            <div id="attendance-page" class="page-view">
+                <div class="attendance-grid">
+                    <h2>Attendance</h2>
+
+                    <div class="attendance-grid">
+                        <div class="att-header">
+                            <h2>Attendance Roll-Call</h2>
+                            <div class="att-controls">
+                                <input type="date" id="att-date-picker" class="att-input">
+                                <select id="att-hostel-filter" class="att-input">
+                                    <option value="ALL">All Hostels</option>
+                                </select>
+                                <select id="att-actor-select" class="att-input"></select>
+                            </div>
+                        </div>
+
+                        <div class="att-table-wrap">
+                            <table class="att-table">
+                                <thead>
+                                    <tr>
+                                        <th>Roll No</th>
+                                        <th>Name</th>
+                                        <th>Room</th>
+                                        <th>Status</th>
+                                        <th>Mark Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="att-roster-tbody">
+                                    <tr>
+                                        <td colspan="5">Loading roster from MongoDB...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="payment-page" class="page-view">
+                <div class="payment-page-grid">
+                    <h2>Payment</h2>
+                </div>
+            </div>
+            <div id="warden-page" class="page-view">
+                <div class="warden-page-grid">
+                    <h2>Warden</h2>
+                </div>
+            </div>
+            <div id="report-page" class="page-view">
+                <div class="report-page-grid">
+                    <h2>Report</h2>
+                </div>
+            </div>
+
+
+            <div class="stats-panel">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div>
+                            <h4>Attendance Tracker</h4>
+                            <span class="day-delta-meta" id="day-delta-meta">Syncing live IST...</span>
+                        </div>
+                        <div class="range-controls">
+                            <button class="range-btn active" data-days="7">7D</button>
+                            <button class="range-btn" data-days="30">30D</button>
+                            <span class="stat-badge" id="weekly-avg-badge">...</span>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <svg class="trend-line-svg" id="attendance-trend-svg" viewBox="0 0 280 110"
+                            preserveAspectRatio="none"></svg>
+                        <div class="bar-chart" id="weekly-bar-chart"></div>
+                    </div>
+                    <div class="chart-labels" id="weekly-chart-labels"></div>
+                </div>
+
+                <div class="stat-card activities-card">
+                    <h4>Recent Activities</h4>
+                    <ul class="activity-list" id="recent-activity-list">
+                        <li class="activity-item"><span>Loading...</span></li>
+                    </ul>
+                </div>
+            </div>
+
         </div>
     </main>
     <script src="script.js"></script>

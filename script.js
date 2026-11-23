@@ -56,3 +56,255 @@ sidebarItems.forEach(item => {
         item.classList.add('active-tab');
     });
 });
+
+const STATS_API_BASE = "http://127.0.0.1:8000/api/stats/live";
+let currentStatsWindow = 7;
+
+async function loadLiveStats(days = currentStatsWindow) {
+    currentStatsWindow = days;
+    try {
+        const res = await fetch(`${STATS_API_BASE}?days=${days}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+
+        // 1. Live Today vs Yesterday header status
+        const metaEl = document.getElementById("day-delta-meta");
+        const todayText = data.today.rate !== null
+            ? `${data.today.day}: ${data.today.rate}% (${data.today.present}/${data.today.total_marked})`
+            : `${data.today.day}: Unmarked`;
+
+        let deltaText = "";
+        if (data.delta_vs_yesterday !== null) {
+            const sign = data.delta_vs_yesterday >= 0 ? "+" : "";
+            deltaText = ` | vs Yest: ${sign}${data.delta_vs_yesterday}%`;
+        } else if (data.yesterday.rate === null) {
+            deltaText = ` | Yest: No record`;
+        }
+        metaEl.textContent = `${todayText}${deltaText}`;
+
+        // 2. Render dynamic rolling 7-day or 30-day chart
+        renderAttendanceTimeline(data.timeline, data.period_avg, days);
+
+        // 3. Render live Recent Activities
+        const list = document.getElementById("recent-activity-list");
+        list.innerHTML = data.recent_activities.length
+            ? data.recent_activities.map(item => `
+                <li class="activity-item">
+                    <span class="activity-dot"></span>
+                    <div class="activity-content">
+                        <p>${item.message}</p>
+                        <span>${item.timestamp ? new Date(item.timestamp).toLocaleString("en-IN") : ""}</span>
+                    </div>
+                </li>
+            `).join("")
+            : `<li class="activity-item"><span>No live events recorded yet.</span></li>`;
+    } catch (err) {
+        console.error("Live stats fetch error:", err);
+        document.getElementById("recent-activity-list").innerHTML =
+            `<li class="activity-item"><span style="color: var(--error-crimson);">Stats API offline.</span></li>`;
+    }
+}
+
+function renderAttendanceTimeline(timeline, periodAvg, days) {
+    const barBox = document.getElementById("weekly-bar-chart");
+    const labelBox = document.getElementById("weekly-chart-labels");
+    const svg = document.getElementById("attendance-trend-svg");
+    const avgBadge = document.getElementById("weekly-avg-badge");
+
+    barBox.innerHTML = "";
+    labelBox.innerHTML = "";
+    barBox.classList.toggle("mode-30d", days > 7);
+    avgBadge.textContent = `${periodAvg}% Avg`;
+
+    if (!timeline || timeline.length === 0) {
+        svg.innerHTML = "";
+        return;
+    }
+
+    const svgW = 280;
+    const svgH = 110;
+    const stepX = svgW / timeline.length;
+    const activePoints = [];
+
+    timeline.forEach((item, i) => {
+        const tooltip = item.has_data
+            ? `${item.short_date} (${item.day}): ${item.present}/${item.total_marked} Present (${item.rate}%)`
+            : `${item.short_date} (${item.day}): No roll-call recorded`;
+
+        const col = document.createElement("div");
+        col.className = "bar-col";
+        col.innerHTML = `
+            <div class="bar-fill ${item.has_data ? "" : "no-data"}"
+                 style="height: ${item.has_data ? item.rate : 0}%;"
+                 title="${tooltip}">
+            </div>`;
+        barBox.appendChild(col);
+
+        // Clean X-axis labels: all 7 days in 7D mode, smart milestones in 30D mode
+        const lbl = document.createElement("span");
+        if (days <= 7) {
+            lbl.textContent = item.day;
+        } else if (i === 0 || i === timeline.length - 1 || i % 7 === 0) {
+            lbl.textContent = item.short_date.split(" ")[0];
+        } else {
+            lbl.textContent = "";
+        }
+        labelBox.appendChild(lbl);
+
+        // Plot SVG trend line only across days with real DB records
+        if (item.has_data) {
+            const x = (i * stepX) + (stepX / 2);
+            const y = svgH - (item.rate / 100) * (svgH - 8) - 4;
+            activePoints.push(`${x},${y}`);
+        }
+    });
+
+    svg.innerHTML = activePoints.length >= 2
+        ? `<polyline fill="none" stroke="var(--accent-green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="${activePoints.join(" ")}" />`
+        : "";
+}
+
+// Wire 7D / 30D range switch buttons
+document.querySelectorAll(".range-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        document.querySelectorAll(".range-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        loadLiveStats(Number(btn.dataset.days));
+    });
+});
+
+// Expose global refresh hook for future Warden/Admin toggle actions
+window.refreshLiveStats = () => loadLiveStats(currentStatsWindow);
+
+document.addEventListener("DOMContentLoaded", () => loadLiveStats(7));
+
+// ==================== WARDEN / ADMIN LIVE ATTENDANCE ENGINE ====================
+const ATT_API_BASE = "http://127.0.0.1:8000/api/attendance";
+let attDropdownsInitialized = false;
+
+async function loadAttendanceRoster() {
+    const dateInput = document.getElementById("att-date-picker");
+    const hostelSelect = document.getElementById("att-hostel-filter");
+    const actorSelect = document.getElementById("att-actor-select");
+    const tbody = document.getElementById("att-roster-tbody");
+
+    if (!tbody) return;
+
+    const params = new URLSearchParams();
+    if (dateInput.value) params.append("date", dateInput.value);
+    if (hostelSelect.value) params.append("hostel_id", hostelSelect.value);
+
+    try {
+        const res = await fetch(`${ATT_API_BASE}/roster?${params.toString()}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+
+        // Sync date picker with server IST date on first load
+        if (!dateInput.value) {
+            dateInput.value = data.date;
+        }
+
+        // Populate Hostel & Warden/Admin dropdowns dynamically from MongoDB once
+        if (!attDropdownsInitialized) {
+            hostelSelect.innerHTML = `<option value="ALL">All Hostels</option>` +
+                data.hostels.map(h => `<option value="${h.hostel_id}">${h.name}</option>`).join("");
+
+            actorSelect.innerHTML = data.staff.map(st =>
+                `<option value="${st.staff_id}" data-role="${st.role}" data-hostel="${st.assigned_hostel_id}">
+                    ${st.staff_id} - ${st.name} (${st.role})
+                </option>`
+            ).join("");
+
+            attDropdownsInitialized = true;
+        }
+
+        if (data.students.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5">No students found for this filter.</td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = data.students.map(s => `
+            <tr data-roll="${s.roll_no}">
+                <td>${s.roll_no}</td>
+                <td>${s.name}</td>
+                <td>${s.room_id || "Unassigned"}</td>
+                <td><span class="att-pill ${s.status}" id="pill-${s.roll_no}">${s.status}</span></td>
+                <td>
+                    <div class="att-btn-group">
+                        <button class="att-btn present ${s.status === "present" ? "active" : ""}"
+                                onclick="submitAttendance('${s.roll_no}', 'present', this)">Present</button>
+                        <button class="att-btn absent ${s.status === "absent" ? "active" : ""}"
+                                onclick="submitAttendance('${s.roll_no}', 'absent', this)">Absent</button>
+                    </div>
+                </td>
+            </tr>
+        `).join("");
+    } catch (err) {
+        console.error("Roster fetch error:", err);
+        tbody.innerHTML = `<tr><td colspan="5" style="color: var(--error-crimson);">Failed to load roster from FastAPI.</td></tr>`;
+    }
+}
+
+async function submitAttendance(rollNo, status, clickedBtn) {
+    const dateInput = document.getElementById("att-date-picker");
+    const actorSelect = document.getElementById("att-actor-select");
+    const selectedActor = actorSelect.options[actorSelect.selectedIndex];
+
+    if (!selectedActor) return;
+
+    const btnGroup = clickedBtn.parentElement;
+    const buttons = btnGroup.querySelectorAll("button");
+    buttons.forEach(b => b.disabled = true);
+
+    try {
+        const res = await fetch(`${ATT_API_BASE}/mark`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                student_roll_no: rollNo,
+                status: status,
+                marked_by: selectedActor.value,
+                actor_role: selectedActor.dataset.role || "warden",
+                date: dateInput.value
+            })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || "Failed to mark attendance");
+
+        // Update UI row instantly
+        const pill = document.getElementById(`pill-${rollNo}`);
+        pill.textContent = status;
+        pill.className = `att-pill ${status}`;
+
+        buttons.forEach(b => b.classList.remove("active"));
+        clickedBtn.classList.add("active");
+
+        // Trigger real-time refresh on Right-Side Stats Bar (Graph + Recent Activities)
+        if (typeof window.refreshLiveStats === "function") {
+            window.refreshLiveStats();
+        }
+    } catch (err) {
+        console.error("Attendance mark error:", err);
+        alert(`Error: ${err.message}`);
+    } finally {
+        buttons.forEach(b => b.disabled = false);
+    }
+}
+
+// Auto-filter hostel when switching Warden/Admin actor (super_admin sees ALL)
+document.getElementById("att-actor-select")?.addEventListener("change", (e) => {
+    const opt = e.target.options[e.target.selectedIndex];
+    const assignedHostel = opt?.dataset?.hostel || "ALL";
+    const hostelSelect = document.getElementById("att-hostel-filter");
+    if (hostelSelect) {
+        hostelSelect.value = assignedHostel;
+        loadAttendanceRoster();
+    }
+});
+
+document.getElementById("att-date-picker")?.addEventListener("change", loadAttendanceRoster);
+document.getElementById("att-hostel-filter")?.addEventListener("change", loadAttendanceRoster);
+
+// Load fresh roster whenever Attendance tab is clicked in sidebar
+document.querySelector('[data-target="attendance-page"]')?.addEventListener("click", loadAttendanceRoster);
