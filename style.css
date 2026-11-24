@@ -127,7 +127,7 @@ nav{
     overflow-y: auto;
     transition: cubic-bezier(0.445, 0.05, 0.55, 0.95);
 }
-aside{
+.sidebar{
     width: 100%;
     height: calc(100vh - 100px);
     background-color: var(--bg-panel);
@@ -139,14 +139,15 @@ aside{
     border-radius: 10px;
     grid-area: nav;
     overflow-y: auto;
+    transition: ease-in-out;
 }
-aside ul{
+.sidebar ul{
     display: flex;
     flex-direction: column;
     gap: 10px;
     margin: 10px;
 }
-aside ul li{
+.sidebar ul li{
     list-style: none;
     display: flex;
     gap: 15px;
@@ -159,7 +160,7 @@ aside ul li{
     background-color: var(--side-hover);
     border: 2px solid var(--side-hover-border);
 }
-aside ul li:hover{
+.sidebar ul li:hover{
     background-color: var(--side-hover);
     border: 2px solid var(--side-hover-border);
 }
@@ -701,4 +702,137 @@ select{
     border-radius: 999px;
     background: var(--card-accent, var(--accent-green));
     transition: width 0.5s ease;
+}
+@media screen and  (max-width: 1000px){
+    .contents{
+        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+        grid-template-areas: "main stats";
+    }
+    .sidebar{
+        position: absolute;
+        width: 25%;
+        height: calc(100vh - 100px);
+        grid-area: auto;
+        transform: translateX(-200%);
+        z-index: -1;
+        transition: ease-in-out;
+        border-right: 1px solid var(--text-primary);
+    }
+    .sidebar.active{
+        transform: translateX(0);
+        z-index: 10;
+    }
+}
+@media screen and (max-width: 810px){
+    .contents{
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto auto; /* lets both rows size to their content */
+        grid-template-areas:
+        "main"
+        "stats";
+    }
+    .sidebar{
+        width: 65%;
+        border-right: 1px solid var(--text-primary);
+    }
+    .stats-panel {
+        grid-area: stats;
+        height: 100vh;
+        min-width: 0;
+        min-height: 0;
+        margin: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        overflow: auto;
+    }
+    .dashboard-page-grid,.student-page-grid,.attendance-grid,.payment-page-grid,.warden-page-grid,.report-page-grid{
+        height: calc(100vh - 90px);
+    }
+    .searchbox{
+        display: none;
+    }
+}
+@media screen and (max-width: 600px) {
+    /* Mobile ke liye extra margin/padding trim */
+    .attendance-grid {
+        width: auto;
+        margin: 6px;
+        padding: 12px;
+    }
+
+    .studentSearch {
+        width: 100%;
+        margin: 10px 0;
+    }
+
+    .att-table-wrap {
+        padding: 0;
+        background: transparent;
+        border: none;
+        overflow-x: visible;
+    }
+
+    .att-table,
+    .att-table tbody {
+        display: block;
+        width: 100%;
+    }
+
+    .att-table thead {
+        display: none;
+    }
+
+    .att-table tr {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        background-color: var(--grid-boxes);
+        border: 1px solid var(--grid-border);
+        border-radius: 10px;
+        padding: 10px 12px;
+        margin-bottom: 10px;
+    }
+
+    .att-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding: 4px 0;
+        border-bottom: 1px solid var(--grid-border);
+        text-align: right;
+        word-break: break-word;
+    }
+
+    .att-table td:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    /* Automatic column labels */
+    .att-table td::before {
+        font-weight: 600;
+        color: var(--text-secondary);
+        font-size: 12px;
+        text-align: left;
+        flex-shrink: 0;
+    }
+
+    .att-table td:nth-of-type(1)::before { content: "Roll No"; }
+    .att-table td:nth-of-type(2)::before { content: "Name"; }
+    .att-table td:nth-of-type(3)::before { content: "Room"; }
+    .att-table td:nth-of-type(4)::before { content: "Status"; }
+    .att-table td:nth-of-type(5)::before { content: "Action"; }
+
+    /* "Loading roster..." wali colspan row ke liye */
+    .att-table td[colspan] {
+        justify-content: center;
+        text-align: center;
+        border-bottom: none;
+    }
+
+    .att-table td[colspan]::before {
+        display: none;
+    }
 }

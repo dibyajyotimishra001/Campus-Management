@@ -602,3 +602,11 @@ async function loadDashboardOverview() {
 window.refreshDashboard = loadDashboardOverview;
 document.addEventListener("DOMContentLoaded", loadDashboardOverview);
 document.querySelector('[data-target="dashboard-page"]')?.addEventListener("click", loadDashboardOverview);
+
+// Responsiveness
+
+const hamburger = document.querySelector(".bi-mortarboard-fill");
+const sidebar = document.querySelector(".sidebar");
+hamburger.addEventListener("click", ()=>{
+    sidebar.classList.toggle("active");
+});
