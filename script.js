@@ -502,3 +502,103 @@ async function searchWardenStudents(query = "", hostelId = "ALL") {
 // Load hostel options automatically when Students tab opens or page loads
 document.addEventListener("DOMContentLoaded", initStudentEntryMeta);
 document.querySelector('[data-target="student-page"]')?.addEventListener("click", initStudentEntryMeta);
+
+// ==================== DYNAMIC DASHBOARD ENGINE ====================
+const DASHBOARD_API_URL = "http://127.0.0.1:8000/api/dashboard";
+
+function formatISTDateHeading(isoDateStr) {
+    const parsedDate = isoDateStr ? new Date(`${isoDateStr}T00:00:00`) : new Date();
+    return parsedDate.toLocaleDateString("en-IN", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    });
+}
+
+function renderDashboardCards(cards) {
+    const grid = document.getElementById("dashboard-kpi-grid");
+    if (!grid) return;
+
+    grid.innerHTML = cards.map(card => `
+        <div class="dash-kpi-card" style="--card-accent: ${card.accent};">
+            <div class="dash-kpi-top">
+                <span class="dash-kpi-label">${card.label}</span>
+                <div class="dash-kpi-icon">${card.icon}</div>
+            </div>
+            <div class="dash-kpi-value">${card.value}</div>
+            ${card.progress !== undefined ? `
+                <div class="dash-kpi-bar-track">
+                    <div class="dash-kpi-bar-fill" style="width: ${card.progress}%;"></div>
+                </div>
+            ` : ""}
+            <span class="dash-kpi-sub">${card.subtext}</span>
+        </div>
+    `).join("");
+}
+
+async function loadDashboardOverview() {
+    const dateHeading = document.getElementById("dashboard-date-heading");
+    const grid = document.getElementById("dashboard-kpi-grid");
+    if (!grid) return;
+
+    try {
+        const res = await fetch(DASHBOARD_API_URL);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const payload = await res.json();
+
+        const { date, total_students, present_today } = payload.data;
+
+        // Display today's Day & Date inside <h3>
+        if (dateHeading) {
+            dateHeading.textContent = formatISTDateHeading(date);
+        }
+
+        const attendancePct = total_students > 0
+            ? Math.round((present_today / total_students) * 100)
+            : 0;
+
+        // Add or edit objects here to scale dashboard boxes dynamically
+        const dashboardCards = [
+            {
+                label: "Total Students",
+                value: total_students,
+                subtext: "Active students enrolled in MongoDB",
+                accent: "var(--accent-blue)",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
+                       </svg>`
+            },
+            {
+                label: "Present Today",
+                value: present_today,
+                subtext: `${attendancePct}% attendance rate (${present_today}/${total_students})`,
+                progress: attendancePct,
+                accent: "var(--accent-green)",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>
+                       </svg>`
+            }
+        ];
+
+        renderDashboardCards(dashboardCards);
+    } catch (err) {
+        console.error("Dashboard fetch error:", err);
+        if (dateHeading) {
+            dateHeading.textContent = formatISTDateHeading();
+        }
+        grid.innerHTML = `
+            <div class="dash-kpi-card" style="--card-accent: var(--error-crimson);">
+                <span class="dash-kpi-label">Connection Error</span>
+                <span class="dash-kpi-sub" style="color: var(--error-crimson);">
+                    Unable to reach /api/dashboard. Check FastAPI server.
+                </span>
+            </div>
+        `;
+    }
+}
+
+// Expose global refresh hook & auto-sync when Dashboard tab is clicked
+window.refreshDashboard = loadDashboardOverview;
+document.addEventListener("DOMContentLoaded", loadDashboardOverview);
+document.querySelector('[data-target="dashboard-page"]')?.addEventListener("click", loadDashboardOverview);

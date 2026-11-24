@@ -581,3 +581,33 @@ async def search_students_for_warden(
         return {"count": len(students), "students": students}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ====================
+# -----Dashboard------
+# ====================
+@app.get("/api/dashboard")
+async def dashboard():
+    try:
+        today_str = datetime.now(IST).date().isoformat()
+
+        # Count active students directly from the students collection
+        total_students = await db.students.count_documents({"is_active": True})
+
+        # Count only today's present entries using the indexed 'date' field
+        present_today = await db.attendance.count_documents({
+            "date": today_str,
+            "status": "present"
+        })
+
+        return {
+            "status": "success",
+            "data": {
+                "date": today_str,
+                "total_students": total_students,
+                "present_today": present_today
+            }
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

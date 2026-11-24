@@ -102,7 +102,22 @@
             <!-- DASHBOARD PAGE -->
             <div id="dashboard-page" class="page-view active-page">
                 <div class="dashboard-page-grid">
-                    <h2>Dashboard Configuration</h2>
+                    <div class="dash-header">
+                        <div>
+                            <h2>Dashboard Overview</h2>
+                            <h3 id="dashboard-date-heading" class="dash-date-heading">Syncing IST date...</h3>
+                        </div>
+                        <span class="dash-live-pill">
+                            <span class="live-pulse-dot"></span> Live Sync
+                        </span>
+                    </div>
+
+                    <!-- Dynamic KPI Boxes injected here by JS -->
+                    <div class="dash-kpi-grid" id="dashboard-kpi-grid">
+                        <div class="dash-kpi-card">
+                            <span class="dash-kpi-label">Loading live metrics...</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -119,11 +134,11 @@
                             </div>
                             <div class="input-style">
                                 <label for="phNo">Phone Number</label><br>
-                                <input class="inputHolder" type="tel" id="phNo" name="phno"
-                                    placeholder="phone number" required>
+                                <input class="inputHolder" type="tel" id="phNo" name="phno" placeholder="phone number"
+                                    required>
                             </div>
                             <div class="input-style">
-                                <label for="parentphNo">Phone Number</label><br>
+                                <label for="parentphNo">Parents Phone Number</label><br>
                                 <input class="inputHolder" type="tel" id="parentphNo" name="parentphno"
                                     placeholder="Guardian's ph" required>
                             </div>
