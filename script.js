@@ -239,6 +239,7 @@ async function loadAttendanceRoster() {
                 </td>
             </tr>
         `).join("");
+        filterAttendanceTable();
     } catch (err) {
         console.error("Roster fetch error:", err);
         tbody.innerHTML = `<tr><td colspan="5" style="color: var(--error-crimson);">Failed to load roster from FastAPI.</td></tr>`;
@@ -308,3 +309,196 @@ document.getElementById("att-hostel-filter")?.addEventListener("change", loadAtt
 
 // Load fresh roster whenever Attendance tab is clicked in sidebar
 document.querySelector('[data-target="attendance-page"]')?.addEventListener("click", loadAttendanceRoster);
+
+// Live client-side search for Attendance Roster (Roll No, Name, Room No)
+function filterAttendanceTable() {
+    const query = document.querySelector(".studentSearch")?.value.trim().toLowerCase() || "";
+    const rows = document.querySelectorAll("#att-roster-tbody tr[data-roll]");
+
+    rows.forEach(row => {
+        const roll = row.cells[0]?.textContent.toLowerCase() || "";
+        const name = row.cells[1]?.textContent.toLowerCase() || "";
+        const room = row.cells[2]?.textContent.toLowerCase() || "";
+
+        row.style.display = (roll.includes(query) || name.includes(query) || room.includes(query)) ? "" : "none";
+    });
+}
+
+document.querySelector(".studentSearch")?.addEventListener("input", filterAttendanceTable);
+const studentSearch = document.querySelector(".studentSearch")
+
+studentSearch.addEventListener("focus", ()=>{
+    studentSearch.classList.add("active");
+});
+studentSearch.addEventListener("blur", ()=>{
+    studentSearch.classList.remove("active");
+});
+
+// ==================== DYNAMIC STUDENT REGISTRATION ENGINE ====================
+const STUDENT_API_BASE = "http://127.0.0.1:8000/api";
+
+let courseBranchesMap = {
+    BTECH: ["CSE (AI/ML)", "CSE", "ECE", "Electrical", "Mechanical", "Civil"],
+    BCA: ["General", "Data Science", "Cloud Computing", "Cyber Security"],
+    MCA: ["General", "AI & ML", "Software Engineering", "Cyber Security"]
+};
+let courseMaxSemMap = { BTECH: 8, BCA: 6, MCA: 4 };
+let studentMetaLoaded = false;
+
+async function initStudentEntryMeta() {
+    if (studentMetaLoaded) return;
+    const hostelSelect = document.getElementById("hostle");
+    if (!hostelSelect) return;
+
+    try {
+        const res = await fetch(`${STUDENT_API_BASE}/students/meta`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+
+        if (data.course_branches) courseBranchesMap = data.course_branches;
+        if (data.course_max_sem) courseMaxSemMap = data.course_max_sem;
+
+        hostelSelect.innerHTML = `<option value="" disabled selected>Select your hostel</option>` +
+            data.hostels.map(h =>
+                `<option value="${h.hostel_id}">
+                    ${h.name} (${h.allowed_gender}, Yr ${h.allowed_years.join("/")})
+                </option>`
+            ).join("");
+
+        studentMetaLoaded = true;
+    } catch (err) {
+        console.error("Failed to load student form metadata:", err);
+    }
+}
+
+// Dynamic Branch dropdown triggered on Course change
+document.getElementById("course")?.addEventListener("change", (e) => {
+    const selectedCourse = e.target.value;
+    const branchWrapper = document.getElementById("branch-wrapper");
+    const branchSelect = document.getElementById("branch");
+    if (!branchWrapper || !branchSelect) return;
+
+    const branches = courseBranchesMap[selectedCourse] || [];
+    if (branches.length > 0) {
+        branchSelect.innerHTML = `<option value="" disabled selected>Select your branch</option>` +
+            branches.map(b => `<option value="${b}">${b}</option>`).join("");
+        branchWrapper.style.display = "block";
+    } else {
+        branchWrapper.style.display = "none";
+        branchSelect.innerHTML = "";
+    }
+});
+
+// Helper to display inline validation / API feedback
+function setStudentFormMsg(text, isError = false) {
+    const msgEl = document.getElementById("student-form-msg");
+    if (!msgEl) return;
+    msgEl.textContent = text;
+    msgEl.style.color = isError ? "var(--error-crimson)" : "var(--accent-green)";
+}
+
+// Validate & Submit Student to FastAPI -> MongoDB
+document.getElementById("student-entry-form")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phNo").value.trim();
+    const guardianPhone = document.getElementById("parentphNo").value.trim();
+    const roomId = document.getElementById("roomNO").value.trim();
+    const rollNo = document.getElementById("rollNumber").value.trim();
+    const semester = Number(document.getElementById("semester").value);
+    const hostelId = document.getElementById("hostle").value;
+    const email = document.getElementById("email").value.trim();
+    const genderInput = document.querySelector('input[name="gender"]:checked');
+    const course = document.getElementById("course").value;
+    const branch = document.getElementById("branch")?.value || "";
+
+    // Client-side validation before hitting FastAPI
+    if (!/^[A-Za-z.\s]{2,80}$/.test(name)) {
+        return setStudentFormMsg("Enter a valid full name (letters only).", true);
+    }
+    if (!/^[6-9]\d{9}$/.test(phone) || !/^[6-9]\d{9}$/.test(guardianPhone)) {
+        return setStudentFormMsg("Both phone numbers must be valid 10-digit Indian numbers.", true);
+    }
+    if (phone === guardianPhone) {
+        return setStudentFormMsg("Student phone and Guardian phone cannot be the same.", true);
+    }
+    if (!/^[A-Za-z0-9-]{4,20}$/.test(rollNo)) {
+        return setStudentFormMsg("Roll number must be alphanumeric (e.g., 2026AI009).", true);
+    }
+    if (!roomId) {
+        return setStudentFormMsg("Enter room number (e.g., SB-102 or 102).", true);
+    }
+    if (!hostelId) {
+        return setStudentFormMsg("Please select a hostel.", true);
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return setStudentFormMsg("Enter a valid email address.", true);
+    }
+    if (!genderInput) {
+        return setStudentFormMsg("Please select Male or Female.", true);
+    }
+    if (!course || !branch) {
+        return setStudentFormMsg("Please select both Course and Branch.", true);
+    }
+    const maxSem = courseMaxSemMap[course] || 8;
+    if (!Number.isInteger(semester) || semester < 1 || semester > maxSem) {
+        return setStudentFormMsg(`Semester for ${course} must be between 1 and ${maxSem}.`, true);
+    }
+
+    const submitBtn = e.target.querySelector(".sub_btn");
+    submitBtn.disabled = true;
+    setStudentFormMsg("Registering student in MongoDB...", false);
+
+    try {
+        const res = await fetch(`${STUDENT_API_BASE}/students/register`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                name,
+                phone,
+                guardian_phone: guardianPhone,
+                room_id: roomId,
+                roll_no: rollNo,
+                semester,
+                hostel_id: hostelId,
+                email,
+                gender: genderInput.value,
+                course,
+                branch
+            })
+        });
+
+        const result = await res.json();
+        if (!res.ok) {
+            const errMsg = Array.isArray(result.detail)
+                ? result.detail[0]?.msg || "Validation failed"
+                : result.detail || "Registration failed";
+            throw new Error(errMsg);
+        }
+
+        setStudentFormMsg(result.message, false);
+        e.target.reset();
+        document.getElementById("branch-wrapper").style.display = "none";
+
+        // Live sync Attendance Roster & Right-Side Stats Bar immediately
+        if (typeof loadAttendanceRoster === "function") loadAttendanceRoster();
+        if (typeof window.refreshLiveStats === "function") window.refreshLiveStats();
+    } catch (err) {
+        setStudentFormMsg(err.message, true);
+    } finally {
+        submitBtn.disabled = false;
+    }
+});
+
+// Live search helper ready for Warden page (returns newly added students instantly)
+async function searchWardenStudents(query = "", hostelId = "ALL") {
+    const params = new URLSearchParams({ q: query, hostel_id: hostelId });
+    const res = await fetch(`${STUDENT_API_BASE}/warden/students?${params.toString()}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+}
+
+// Load hostel options automatically when Students tab opens or page loads
+document.addEventListener("DOMContentLoaded", initStudentEntryMeta);
+document.querySelector('[data-target="student-page"]')?.addEventListener("click", initStudentEntryMeta);

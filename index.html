@@ -108,14 +108,97 @@
 
             <div id="student-page" class="page-view">
                 <div class="student-page-grid">
-                    <h2>Students</h2>
+                    <h2>Student's Entry</h2>
+
+                    <div class="form-container">
+                        <form id="student-entry-form" novalidate>
+                            <div class="input-style">
+                                <label for="name">Enter your name</label><br>
+                                <input class="inputHolder" type="text" id="name" name="name" placeholder="Name"
+                                    required>
+                            </div>
+                            <div class="input-style">
+                                <label for="phNo">Phone Number</label><br>
+                                <input class="inputHolder" type="tel" id="phNo" name="phno"
+                                    placeholder="phone number" required>
+                            </div>
+                            <div class="input-style">
+                                <label for="parentphNo">Phone Number</label><br>
+                                <input class="inputHolder" type="tel" id="parentphNo" name="parentphno"
+                                    placeholder="Guardian's ph" required>
+                            </div>
+                            <div class="input-style">
+                                <label for="roomNO">Room no</label><br>
+                                <input class="inputHolder" type="text" id="roomNO" name="roomNO"
+                                    placeholder="Room number" required>
+                            </div>
+
+                            <div class="input-style">
+                                <label for="rollNumber">Roll num</label><br>
+                                <input class="inputHolder" type="text" id="rollNumber" name="rollNumber"
+                                    placeholder="Roll num" required>
+                            </div>
+                            <div class="input-style">
+                                <label for="semester">Semester</label><br>
+                                <input class="inputHolder" type="number" id="semester" name="semester"
+                                    placeholder="Semester" required>
+                            </div>
+                            <div class="input-style">
+                                <label for="hostle">Select Hostle</label><br>
+                                <select id="hostle" name="hostle" required>
+                                    <option value="" disabled selected>Select your hostle</option>
+                                    <!-- Insert all hostle names here -->
+                                </select>
+                            </div>
+
+                            <div class="input-style">
+                                <label for="email">Email Address</label><br>
+                                <input class="inputHolder" type="email" id="email" name="email"
+                                    placeholder="Email address" required>
+                            </div>
+
+                            <div class="input-style genderInp">
+                                <input type="radio" id="male" name="gender" value="male">
+                                <label for="male">Male</label>
+                                <input type="radio" id="female" name="gender" value="female">
+                                <label for="female">Female</label>
+                            </div>
+
+                            <div class="input-style">
+                                <label for="course">Select Course</label><br>
+                                <select id="course" name="course" required>
+                                    <option value="" disabled selected>Select your course</option>
+                                    <option value="BTECH">BTECH</option>
+                                    <option value="BCA">BCA</option>
+                                    <option value="MCA">MCA</option>
+                                </select>
+                            </div>
+
+                            <div class="input-style" id="branch-wrapper" style="display: none;">
+                                <label for="branch">Select Branch</label><br>
+                                <select id="branch" name="branch" required>
+                                    <option value="" disabled selected>Select your branch</option>
+                                </select>
+                            </div>
+
+                            <p id="student-form-msg" style="font-size: 13px; margin: 8px 0; min-height: 18px;"></p>
+
+                            <div class="input-style btn">
+                                <input type="submit" value="submit" class="sub_btn">
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
             <div id="attendance-page" class="page-view">
                 <div class="attendance-grid">
                     <h2>Attendance</h2>
 
-                    <div class="attendance-grid">
+                    <div class="student-search">
+                        <input type="text" class="studentSearch" placeholder="Search Student">
+                    </div>
+
+                    <div class="attendance">
                         <div class="att-header">
                             <h2>Attendance Roll-Call</h2>
                             <div class="att-controls">

@@ -155,6 +155,10 @@ aside ul li{
     border-radius: 10px;
     border: 2px solid transparent;
 }
+.sidebar ul li.active-tab {
+    background-color: var(--side-hover);
+    border: 2px solid var(--side-hover-border);
+}
 aside ul li:hover{
     background-color: var(--side-hover);
     border: 2px solid var(--side-hover-border);
@@ -188,7 +192,7 @@ aside ul li:hover{
     display: flex;
     flex-direction: column;
     gap: 10px;
-    overflow: hidden;
+    overflow: auto;
 }
 
 .stat-card {
@@ -276,7 +280,6 @@ aside ul li:hover{
 .activities-card {
     flex: 1;
     min-height: 0;
-    overflow-y: auto;
 }
 
 .activity-list {
@@ -462,4 +465,107 @@ aside ul li:hover{
 .att-btn:disabled {
     opacity: 0.5;
     cursor: wait;
+}
+.studentSearch{
+    border-radius: 50px;
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    outline: none;
+    border: 2px solid var(--text-secondary);
+    padding: 10px;
+    width: 190px;
+    height: 35px;
+    margin: 20px;
+}
+.studentSearch.active{
+    border: 2px solid var(--accent-green);
+}
+.form-container{
+    width: 100%; 
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    grid-area: main;
+    gap: 20px;
+}
+.form-container > form{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 90%;
+    min-height: 0;
+}
+.input-style{
+    display: flex;
+    /* align-items: center; */
+    justify-content: center;
+    flex-direction: column;
+}
+.genderInp{
+    flex-direction: row;
+    gap: 20px;
+    justify-content: flex-start;
+}
+.back-btn{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--accent-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    margin: 10px;
+    color: white;
+    transition: 0.2s ease;
+}
+.back-btn:hover{
+    transform: scale(1.10);
+    background-image: linear-gradient(-45deg, rgb(108, 108, 254), rgb(227, 118, 254));
+    color: white;
+}
+.inputHolder{
+    width: 90%;
+    max-width: 320px;
+    border-radius: 10px;
+    height: 42px;
+    padding: 0 14px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: var(--grid-border);
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+input:focus{
+    border-color: rgba(173, 156, 255, 0.8);
+    box-shadow: 0 0 0 4px rgba(173, 156, 255, 0.12);
+    background: rgba(255, 255, 255, 0.1);
+}
+.sub_btn{
+    height: 35px;
+    width: 85px;
+    color: #fff;
+    background-color: blueviolet;
+    border-style: none;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: 0.2s ease;
+}
+.sub_btn:hover{
+    transform: scale(1.10);
+    background-image: linear-gradient(-45deg, rgb(108, 200, 254), rgb(175, 118, 254));
+    color: white;
+}
+.btn{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+select{
+    background-color: var(--bg-panel);
+    color: var(--text-primary);
 }
