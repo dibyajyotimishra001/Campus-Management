@@ -1,0 +1,116 @@
+/* ==================== ATTENDANCE ROLL-CALL UI ==================== */
+.att-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.att-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.att-input {
+    background-color: var(--grid-boxes);
+    color: var(--text-primary);
+    border: 1px solid var(--grid-border);
+    border-radius: 8px;
+    padding: 7px 10px;
+    font-size: 13px;
+    outline: none;
+}
+
+.att-input:focus {
+    border-color: var(--accent-blue);
+}
+
+.att-table-wrap {
+    background-color: var(--grid-boxes);
+    border: 1px solid var(--grid-border);
+    border-radius: 10px;
+    padding: 10px;
+    overflow-x: auto;
+}
+
+.att-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.att-table th,
+.att-table td {
+    text-align: left;
+    padding: 10px 8px;
+    border-bottom: 1px solid var(--grid-border);
+}
+
+.att-table th {
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.att-pill {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+.att-pill.present  { background: #14b8a626; color: var(--accent-green); }
+.att-pill.absent   { background: #f43f5e26; color: var(--error-crimson); }
+.att-pill.unmarked { background: #fbbf2426; color: var(--warning-amber); }
+
+.att-btn-group {
+    display: flex;
+    gap: 6px;
+}
+
+.att-btn {
+    padding: 5px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--grid-border);
+    background-color: var(--bg-panel);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.15s ease;
+}
+
+.att-btn.present:hover,
+.att-btn.present.active {
+    background-color: var(--accent-green);
+    border-color: var(--accent-green);
+    color: #090b10;
+}
+
+.att-btn.absent:hover,
+.att-btn.absent.active {
+    background-color: var(--error-crimson);
+    border-color: var(--error-crimson);
+    color: #ffffff;
+}
+
+.att-btn:disabled {
+    opacity: 0.5;
+    cursor: wait;
+}
+.studentSearch{
+    border-radius: 50px;
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    outline: none;
+    border: 2px solid var(--text-secondary);
+    padding: 10px;
+    width: 190px;
+    height: 35px;
+    margin: 20px;
+}
+.studentSearch.active{
+    border: 2px solid var(--accent-green);
+}

@@ -1,0 +1,182 @@
+/* ==================== ONLY NEW STATS PANEL CSS ==================== */
+.stats-panel {
+    grid-area: stats;
+    height: calc(100vh - 100px);
+    min-width: 0;
+    min-height: 0;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: auto;
+}
+
+.stat-card {
+    background-color: var(--bg-panel);
+    border: 1px solid var(--grid-border);
+    border-radius: 10px;
+    padding: 14px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.stat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.stat-badge {
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    background-color: var(--side-hover);
+    color: var(--accent-green);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.chart-wrapper {
+    position: relative;
+    height: 110px;
+    width: 100%;
+    padding-top: 6px;
+}
+
+.trend-line-svg {
+    position: absolute;
+    top: 6px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 6px);
+    pointer-events: none;
+    z-index: 2;
+}
+
+.bar-chart {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    height: 100%;
+    gap: 6px;
+    z-index: 1;
+}
+
+.bar-col {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.bar-fill {
+    width: 10px;
+    border-radius: 6px 6px 2px 2px;
+    background: linear-gradient(180deg, var(--accent-green), var(--accent-blue));
+    transition: height 0.4s ease;
+}
+
+.chart-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.chart-labels span {
+    flex: 1;
+    text-align: center;
+}
+
+.activities-card {
+    flex: 1;
+    min-height: 0;
+}
+
+.activity-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.activity-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 12px;
+}
+
+.activity-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 4px;
+    flex-shrink: 0;
+    background-color: var(--accent-green);
+}
+
+.activity-content {
+    min-width: 0;
+    word-wrap: break-word;
+}
+
+.activity-content span {
+    display: block;
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+.day-delta-meta {
+    display: block;
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+.range-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.range-btn {
+    background: var(--grid-boxes);
+    color: var(--text-secondary);
+    border: 1px solid var(--grid-border);
+    border-radius: 6px;
+    padding: 2px 7px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.range-btn.active {
+    background: var(--accent-blue);
+    color: #ffffff;
+    border-color: var(--accent-blue);
+}
+
+/* Unmarked day baseline (honest zero-data indicator) */
+.bar-fill.no-data {
+    height: 4px !important;
+    background: var(--grid-border);
+    opacity: 0.45;
+}
+
+/* Auto-compact bars when switched to 30-Day (1 Month) view */
+.bar-chart.mode-30d {
+    gap: 2px;
+}
+
+.bar-chart.mode-30d .bar-fill {
+    width: 100%;
+    max-width: 5px;
+    border-radius: 3px 3px 1px 1px;
+}
