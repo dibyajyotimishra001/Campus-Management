@@ -183,304 +183,6 @@ nav{
 .page-view.active-page {
     display: contents;
 }
-/* ==================== ONLY NEW STATS PANEL CSS ==================== */
-.stats-panel {
-    grid-area: stats;
-    height: calc(100vh - 100px);
-    min-width: 0;
-    min-height: 0;
-    margin: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    overflow: auto;
-}
-
-.stat-card {
-    background-color: var(--bg-panel);
-    border: 1px solid var(--grid-border);
-    border-radius: 10px;
-    padding: 14px;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.stat-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-}
-
-.stat-badge {
-    font-size: 12px;
-    padding: 3px 8px;
-    border-radius: 20px;
-    background-color: var(--side-hover);
-    color: var(--accent-green);
-    font-weight: 600;
-    white-space: nowrap;
-}
-
-.chart-wrapper {
-    position: relative;
-    height: 110px;
-    width: 100%;
-    padding-top: 6px;
-}
-
-.trend-line-svg {
-    position: absolute;
-    top: 6px;
-    left: 0;
-    width: 100%;
-    height: calc(100% - 6px);
-    pointer-events: none;
-    z-index: 2;
-}
-
-.bar-chart {
-    position: relative;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    height: 100%;
-    gap: 6px;
-    z-index: 1;
-}
-
-.bar-col {
-    flex: 1;
-    height: 100%;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-}
-
-.bar-fill {
-    width: 10px;
-    border-radius: 6px 6px 2px 2px;
-    background: linear-gradient(180deg, var(--accent-green), var(--accent-blue));
-    transition: height 0.4s ease;
-}
-
-.chart-labels {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    color: var(--text-secondary);
-}
-
-.chart-labels span {
-    flex: 1;
-    text-align: center;
-}
-
-.activities-card {
-    flex: 1;
-    min-height: 0;
-}
-
-.activity-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.activity-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    font-size: 12px;
-}
-
-.activity-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    margin-top: 4px;
-    flex-shrink: 0;
-    background-color: var(--accent-green);
-}
-
-.activity-content {
-    min-width: 0;
-    word-wrap: break-word;
-}
-
-.activity-content span {
-    display: block;
-    font-size: 11px;
-    color: var(--text-secondary);
-    margin-top: 2px;
-}
-.day-delta-meta {
-    display: block;
-    font-size: 11px;
-    color: var(--text-secondary);
-    margin-top: 2px;
-}
-
-.range-controls {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.range-btn {
-    background: var(--grid-boxes);
-    color: var(--text-secondary);
-    border: 1px solid var(--grid-border);
-    border-radius: 6px;
-    padding: 2px 7px;
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.2s ease;
-}
-
-.range-btn.active {
-    background: var(--accent-blue);
-    color: #ffffff;
-    border-color: var(--accent-blue);
-}
-
-/* Unmarked day baseline (honest zero-data indicator) */
-.bar-fill.no-data {
-    height: 4px !important;
-    background: var(--grid-border);
-    opacity: 0.45;
-}
-
-/* Auto-compact bars when switched to 30-Day (1 Month) view */
-.bar-chart.mode-30d {
-    gap: 2px;
-}
-
-.bar-chart.mode-30d .bar-fill {
-    width: 100%;
-    max-width: 5px;
-    border-radius: 3px 3px 1px 1px;
-}
-/* ==================== ATTENDANCE ROLL-CALL UI ==================== */
-.att-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 16px;
-}
-
-.att-controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-.att-input {
-    background-color: var(--grid-boxes);
-    color: var(--text-primary);
-    border: 1px solid var(--grid-border);
-    border-radius: 8px;
-    padding: 7px 10px;
-    font-size: 13px;
-    outline: none;
-}
-
-.att-input:focus {
-    border-color: var(--accent-blue);
-}
-
-.att-table-wrap {
-    background-color: var(--grid-boxes);
-    border: 1px solid var(--grid-border);
-    border-radius: 10px;
-    padding: 10px;
-    overflow-x: auto;
-}
-
-.att-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-}
-
-.att-table th,
-.att-table td {
-    text-align: left;
-    padding: 10px 8px;
-    border-bottom: 1px solid var(--grid-border);
-}
-
-.att-table th {
-    color: var(--text-secondary);
-    font-weight: 600;
-}
-
-.att-pill {
-    padding: 3px 10px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: capitalize;
-}
-.att-pill.present  { background: #14b8a626; color: var(--accent-green); }
-.att-pill.absent   { background: #f43f5e26; color: var(--error-crimson); }
-.att-pill.unmarked { background: #fbbf2426; color: var(--warning-amber); }
-
-.att-btn-group {
-    display: flex;
-    gap: 6px;
-}
-
-.att-btn {
-    padding: 5px 12px;
-    border-radius: 6px;
-    border: 1px solid var(--grid-border);
-    background-color: var(--bg-panel);
-    color: var(--text-secondary);
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.15s ease;
-}
-
-.att-btn.present:hover,
-.att-btn.present.active {
-    background-color: var(--accent-green);
-    border-color: var(--accent-green);
-    color: #090b10;
-}
-
-.att-btn.absent:hover,
-.att-btn.absent.active {
-    background-color: var(--error-crimson);
-    border-color: var(--error-crimson);
-    color: #ffffff;
-}
-
-.att-btn:disabled {
-    opacity: 0.5;
-    cursor: wait;
-}
-.studentSearch{
-    border-radius: 50px;
-    background-color: var(--bg-base);
-    color: var(--text-primary);
-    outline: none;
-    border: 2px solid var(--text-secondary);
-    padding: 10px;
-    width: 190px;
-    height: 35px;
-    margin: 20px;
-}
-.studentSearch.active{
-    border: 2px solid var(--accent-green);
-}
 .form-container{
     width: 100%; 
     min-height: 300px;
@@ -569,139 +271,6 @@ input:focus{
 select{
     background-color: var(--bg-panel);
     color: var(--text-primary);
-}
-/* ==================== DASHBOARD DYNAMIC KPI BOXES ==================== */
-.dash-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 20px;
-}
-
-.dash-date-heading {
-    margin-top: 6px;
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--accent-green);
-    letter-spacing: 0.3px;
-}
-
-.dash-live-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 12px;
-    border-radius: 999px;
-    background-color: var(--side-hover);
-    border: 1px solid var(--side-hover-border);
-    color: var(--accent-green);
-    font-size: 12px;
-    font-weight: 600;
-}
-
-.live-pulse-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: var(--accent-green);
-    box-shadow: 0 0 8px var(--accent-green);
-    animation: dashPulse 1.8s infinite;
-}
-
-@keyframes dashPulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.45; transform: scale(0.85); }
-}
-
-.dash-kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 16px;
-}
-
-.dash-kpi-card {
-    position: relative;
-    background-color: var(--grid-boxes);
-    border: 1px solid var(--grid-border);
-    border-radius: 14px;
-    padding: 18px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    overflow: hidden;
-    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.dash-kpi-card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background: var(--card-accent, var(--accent-blue));
-}
-
-.dash-kpi-card:hover {
-    transform: translateY(-3px);
-    border-color: var(--card-accent, var(--accent-blue));
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-}
-
-.dash-kpi-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-}
-
-.dash-kpi-label {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.dash-kpi-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--bg-panel);
-    border: 1px solid var(--grid-border);
-    color: var(--card-accent, var(--accent-blue));
-}
-
-.dash-kpi-value {
-    font-size: 32px;
-    font-weight: 700;
-    color: var(--text-primary);
-    line-height: 1.1;
-}
-
-.dash-kpi-sub {
-    font-size: 12px;
-    color: var(--text-secondary);
-}
-
-.dash-kpi-bar-track {
-    width: 100%;
-    height: 6px;
-    border-radius: 999px;
-    background-color: var(--bg-panel);
-    overflow: hidden;
-}
-
-.dash-kpi-bar-fill {
-    height: 100%;
-    border-radius: 999px;
-    background: var(--card-accent, var(--accent-green));
-    transition: width 0.5s ease;
 }
 @media screen and  (max-width: 1000px){
     .contents{
@@ -834,5 +403,74 @@ select{
 
     .att-table td[colspan]::before {
         display: none;
+    }
+}
+.contact-form{
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    align-items: center;
+    justify-content: center;
+}
+label{
+    width: 80%;
+}
+.user-inp{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    gap: 5px;
+}
+.userInp{
+    width: 80%;
+    padding: 8px;
+    height: 40px;
+    border-radius: 10px;
+    outline: none;
+    border: 2px solid var(--text-primary);
+    background-color: var(--darkBody);
+    color: var(--lightBody);
+}
+.userInp.active{
+    border: 2px solid var(--accent-green);
+}
+#userMessage{
+    width: 80%;
+    padding: 8px;
+    border-radius: 10px;
+    outline: none;
+    border: 2px solid var(--text-primary);
+    background-color: var(--darkBody);
+    color: var(--lightBody);
+}
+#userMessage.active{
+    border: 2px solid var(--accent-green);
+}
+.subBtn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.submit-btn{
+    width: 110px;
+    height: 35px;
+    background-color: rgb(84, 3, 197);
+    color: white;
+    border-radius: 10px;
+    border: none;
+}
+.submit-btn:hover{
+    background-color: rgb(57, 3, 134);
+}
+@media screen and (max-width: 665px){
+    .userInp{
+        width: 95%;
+    }
+    #userMessage{
+        width: 95%;
+    }
+    label{
+        width: 95%;
     }
 }

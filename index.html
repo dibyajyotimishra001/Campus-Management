@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Campus Management System</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="form.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="attendance.css">
+    <link rel="stylesheet" href="stats.css">
 </head>
 
 <body>
@@ -259,6 +263,34 @@
             <div id="report-page" class="page-view">
                 <div class="report-page-grid">
                     <h2>Report</h2>
+
+                    <form action="https://formspree.io/f/mvkavnwr" method="POST" class="contact-form">
+                        <!-- Hidden input to keep all email subjects EXACTLY the same for easy searching -->
+                        <input type="hidden" name="_subject" value="[Campus Management:] Report">
+
+                        <!-- User Input -->
+                        <div class="user-inp">
+                            <label for="name">Name</label>
+                            <input type="text" name="name" id="name" class="userInp" placeholder="Enter your Name"
+                                required>
+                        </div>
+
+                        <div class="user-inp">
+                            <label for="email">Email</label>
+                            <input type="email" name="email" id="email" class="userInp" placeholder="Enter your Email"
+                                required>
+                        </div>
+
+                        <div class="user-inp">
+                            <label for="userMss">Enter your message</label>
+                            <textarea id="userMessage" name="message" rows="10" required
+                                placeholder="How can we help you?"></textarea>
+                        </div>
+
+                        <div class="subBtn">
+                            <button type="submit" class="submit-btn">Send Message</button>
+                        </div>
+                    </form>
                 </div>
             </div>
 
