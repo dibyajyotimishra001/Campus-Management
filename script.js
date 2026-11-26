@@ -334,6 +334,20 @@ studentSearch.addEventListener("blur", ()=>{
     studentSearch.classList.remove("active");
 });
 
+document.querySelectorAll(".userInp").forEach(inp => {
+    inp.addEventListener("focus", () => inp.classList.add("active"));
+    inp.addEventListener("blur", () => inp.classList.remove("active"));
+});
+
+
+const userMessage = document.getElementById("userMessage");
+userMessage.addEventListener("focus", ()=>{
+    userMessage.classList.add("active");
+});
+userMessage.addEventListener("blur", ()=>{
+    userMessage.classList.remove("active");
+});
+
 // ==================== DYNAMIC STUDENT REGISTRATION ENGINE ====================
 const STUDENT_API_BASE = "http://127.0.0.1:8000/api";
 
@@ -590,8 +604,8 @@ async function loadDashboardOverview() {
         grid.innerHTML = `
             <div class="dash-kpi-card" style="--card-accent: var(--error-crimson);">
                 <span class="dash-kpi-label">Connection Error</span>
-                <span class="dash-kpi-sub" style="color: var(--error-crimson);">
-                    Unable to reach /api/dashboard. Check FastAPI server.
+                <span class="dash-kpi-sub">
+                    <p style="color: var(--error-crimson);">Unable to reach /api/dashboard. Check FastAPI server.</p>
                 </span>
             </div>
         `;
@@ -610,3 +624,88 @@ const sidebar = document.querySelector(".sidebar");
 hamburger.addEventListener("click", ()=>{
     sidebar.classList.toggle("active");
 });
+
+// ==================== STUDENT INFORMATION DIRECTORY ENGINE ====================
+let sinfoHostelsLoaded = false;
+let sinfoSearchTimer = null;
+
+async function loadStudentDirectory() {
+    const grid = document.getElementById("sinfo-cards-grid");
+    const countMeta = document.getElementById("sinfo-count-meta");
+    const searchInput = document.getElementById("sinfo-search");
+    const hostelSelect = document.getElementById("sinfo-hostel-filter");
+
+    if (!grid) return;
+
+    const query = searchInput?.value.trim() || "";
+    const hostelId = hostelSelect?.value || "ALL";
+
+    try {
+        const data = await searchWardenStudents(query, hostelId);
+
+        if (!sinfoHostelsLoaded && hostelSelect && data.hostels) {
+            hostelSelect.innerHTML = `<option value="ALL">All Hostels</option>` +
+                data.hostels.map(h => `<option value="${h.hostel_id}">${h.name}</option>`).join("");
+            sinfoHostelsLoaded = true;
+        }
+
+        if (countMeta) {
+            countMeta.textContent = `${data.count} Active Student${data.count === 1 ? "" : "s"} Found`;
+        }
+
+        if (!data.students || data.students.length === 0) {
+            grid.innerHTML = `<p class="sinfo-empty">No matching students found.</p>`;
+            return;
+        }
+
+        grid.innerHTML = data.students.map(s => `
+            <div class="sinfo-card">
+                <div class="sinfo-card-top">
+                    <div>
+                        <div class="sinfo-name">${s.name}</div>
+                        <span class="sinfo-roll">${s.roll_no}</span>
+                    </div>
+                    <span class="sinfo-branch-pill">${s.branch || "N/A"}</span>
+                </div>
+
+                <div class="sinfo-details">
+                    <div class="sinfo-item">
+                        <span class="sinfo-label">Year / Semester</span>
+                        <span class="sinfo-val">Year ${s.year ?? "-"} • Sem ${s.semester ?? "-"}</span>
+                    </div>
+                    <div class="sinfo-item">
+                        <span class="sinfo-label">Room No</span>
+                        <span class="sinfo-val">${s.room_id || "Unassigned"}</span>
+                    </div>
+                    <div class="sinfo-item full-row">
+                        <span class="sinfo-label">Hostel</span>
+                        <span class="sinfo-val">${s.hostel_name || s.hostel_id || "Unassigned"}</span>
+                    </div>
+                    <div class="sinfo-item full-row">
+                        <span class="sinfo-label">Email</span>
+                        <a class="sinfo-val" href="mailto:${s.email}">${s.email || "-"}</a>
+                    </div>
+                    <div class="sinfo-item">
+                        <span class="sinfo-label">Student Phone</span>
+                        <a class="sinfo-val" href="tel:${s.phone}">${s.phone || "-"}</a>
+                    </div>
+                    <div class="sinfo-item">
+                        <span class="sinfo-label">Parent Phone</span>
+                        <a class="sinfo-val" href="tel:${s.guardian_phone}">${s.guardian_phone || "-"}</a>
+                    </div>
+                </div>
+            </div>
+        `).join("");
+    } catch (err) {
+        console.error("Student directory load error:", err);
+        grid.innerHTML = `<p class="sinfo-empty" style="color: var(--error-crimson);">Failed to load student directory from FastAPI.</p>`;
+    }
+}
+
+document.getElementById("sinfo-search")?.addEventListener("input", () => {
+    clearTimeout(sinfoSearchTimer);
+    sinfoSearchTimer = setTimeout(loadStudentDirectory, 250);
+});
+
+document.getElementById("sinfo-hostel-filter")?.addEventListener("change", loadStudentDirectory);
+document.querySelector('[data-target="student-info-page"]')?.addEventListener("click", loadStudentDirectory);

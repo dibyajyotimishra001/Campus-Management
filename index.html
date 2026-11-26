@@ -5,11 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Campus Management System</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="form.css">
-    <link rel="stylesheet" href="dashboard.css">
-    <link rel="stylesheet" href="attendance.css">
-    <link rel="stylesheet" href="stats.css">
+    <link rel="stylesheet" href="stylesheets/style.css">
+    <link rel="stylesheet" href="stylesheets/dashboard.css">
+    <link rel="stylesheet" href="stylesheets/attendance.css">
+    <link rel="stylesheet" href="stylesheets/stats.css">
+    <link rel="stylesheet" href="stylesheets/payment.css">
+    <link rel="stylesheet" href="stylesheets/student-info.css">
+    <link rel="stylesheet" href="stylesheets/responsive.css">
 </head>
 
 <body>
@@ -23,7 +25,7 @@
                     <path
                         d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466z" />
                 </svg>
-                <h3>Campus Management</h3>
+                <h3 class="site-title">Campus Management</h3>
                 <div class="searchbox">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-search" viewBox="0 0 16 16">
@@ -82,15 +84,15 @@
                         </svg>
                         <p>Fee & Payment</p>
                     </li>
-                    <li data-target="warden-page">
+                    <li data-target="student-info-page">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-building" viewBox="0 0 16 16">
+                            class="bi bi-person-vcard" viewBox="0 0 16 16">
                             <path
-                                d="M4 2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z" />
+                                d="M5 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4m4-2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5M9 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4A.5.5 0 0 1 9 8m1 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5" />
                             <path
-                                d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1zm11 0H3v14h3v-2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V15h3z" />
+                                d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM1 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H8.96q.04-.245.04-.5C9 10.567 7.21 9 5 9c-2.086 0-3.8 1.398-3.984 3.181A1 1 0 0 1 1 12z" />
                         </svg>
-                        <p>Warden</p>
+                        <p>Student Info</p>
                     </li>
                     <li data-target="report-page">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -252,17 +254,172 @@
             </div>
             <div id="payment-page" class="page-view">
                 <div class="payment-page-grid">
-                    <h2>Payment</h2>
+                    <div class="pay-header">
+                        <div>
+                            <h2>Fee & Payment Ledger</h2>
+                            <p class="pay-subtitle">Real-time dues tracking, atomic receipt generation & audit sync</p>
+                        </div>
+                        <button type="button" id="pay-refresh-btn" class="pay-refresh-btn">Sync Ledger</button>
+                    </div>
+
+                    <!-- Live KPI Cards injected by JS -->
+                    <div class="pay-kpi-grid" id="pay-kpi-grid">
+                        <div class="pay-kpi-card">
+                            <span class="pay-kpi-label">Loading fee analytics...</span>
+                        </div>
+                    </div>
+
+                    <!-- Search, Hostel Filter & Status Pills -->
+                    <div class="pay-toolbar">
+                        <input type="text" id="pay-search-input" class="pay-search-input"
+                            placeholder="Search Roll No, Name, Room...">
+
+                        <select id="pay-hostel-filter" class="att-input">
+                            <option value="ALL">All Hostels</option>
+                        </select>
+
+                        <div class="pay-status-filters" id="pay-status-filters">
+                            <button type="button" class="pay-filter-pill active" data-status="ALL">All</button>
+                            <button type="button" class="pay-filter-pill" data-status="unpaid">Unpaid</button>
+                            <button type="button" class="pay-filter-pill" data-status="partial">Partial</button>
+                            <button type="button" class="pay-filter-pill" data-status="paid">Paid</button>
+                        </div>
+                    </div>
+
+                    <!-- Student Dues Roster Table -->
+                    <div class="pay-table-wrap">
+                        <table class="pay-table">
+                            <thead>
+                                <tr>
+                                    <th>Roll No</th>
+                                    <th>Student</th>
+                                    <th>Total Fee</th>
+                                    <th>Paid</th>
+                                    <th>Pending Due</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pay-roster-tbody">
+                                <tr>
+                                    <td colspan="7">Loading fee records from MongoDB...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- MODAL 1: RECORD PAYMENT -->
+                <div class="pay-modal-overlay" id="pay-record-modal">
+                    <div class="pay-modal-card">
+                        <div class="pay-modal-header">
+                            <div>
+                                <h3>Record Fee Payment</h3>
+                                <p id="pay-modal-student-info" class="pay-modal-sub"></p>
+                            </div>
+                            <button type="button" class="pay-modal-close" data-close-modal="pay-record-modal">&times;</button>
+                        </div>
+
+                        <form id="pay-record-form" class="pay-modal-form" novalidate>
+                            <input type="hidden" id="pay-roll-no">
+                            <input type="hidden" id="pay-max-due">
+
+                            <div class="pay-field">
+                                <div class="pay-field-top">
+                                    <label for="pay-amount">Amount (INR)</label>
+                                    <div class="pay-quick-btns">
+                                        <button type="button" id="pay-quick-half" class="pay-chip-btn">50% Due</button>
+                                        <button type="button" id="pay-quick-full" class="pay-chip-btn">Full Due</button>
+                                    </div>
+                                </div>
+                                <input type="number" id="pay-amount" class="pay-input" min="1" required
+                                    placeholder="Enter amount in ₹">
+                            </div>
+
+                            <div class="pay-field-row">
+                                <div class="pay-field">
+                                    <label for="pay-mode">Payment Mode</label>
+                                    <select id="pay-mode" class="pay-input" required>
+                                        <option value="UPI">UPI</option>
+                                        <option value="Cash">Cash</option>
+                                        <option value="Bank Transfer">Bank Transfer</option>
+                                        <option value="Card">Card</option>
+                                        <option value="Cheque">Cheque</option>
+                                    </select>
+                                </div>
+
+                                <div class="pay-field">
+                                    <label for="pay-actor-select">Recorded By</label>
+                                    <select id="pay-actor-select" class="pay-input" required></select>
+                                </div>
+                            </div>
+
+                            <div class="pay-field" id="pay-ref-group">
+                                <label for="pay-ref-id">UTR / Transaction Reference ID</label>
+                                <input type="text" id="pay-ref-id" class="pay-input"
+                                    placeholder="e.g., UTR432910884721">
+                            </div>
+
+                            <div class="pay-field">
+                                <label for="pay-remarks">Remarks (Optional)</label>
+                                <input type="text" id="pay-remarks" class="pay-input"
+                                    placeholder="e.g., 1st Installment / Semester Fee">
+                            </div>
+
+                            <p id="pay-form-msg" class="pay-form-msg"></p>
+
+                            <div class="pay-modal-actions">
+                                <button type="button" class="pay-btn-ghost" data-close-modal="pay-record-modal">Cancel</button>
+                                <button type="submit" id="pay-submit-btn" class="pay-btn-primary">Confirm Payment</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- MODAL 2: STUDENT PAYMENT LEDGER / RECEIPT HISTORY -->
+                <div class="pay-modal-overlay" id="pay-ledger-modal">
+                    <div class="pay-modal-card pay-modal-wide">
+                        <div class="pay-modal-header">
+                            <div>
+                                <h3>Payment History & Receipts</h3>
+                                <p id="pay-ledger-header-info" class="pay-modal-sub"></p>
+                            </div>
+                            <button type="button" class="pay-modal-close" data-close-modal="pay-ledger-modal">&times;</button>
+                        </div>
+
+                        <div id="pay-ledger-summary" class="pay-ledger-summary"></div>
+                        <div id="pay-ledger-list" class="pay-ledger-list"></div>
+                    </div>
                 </div>
             </div>
-            <div id="warden-page" class="page-view">
-                <div class="warden-page-grid">
-                    <h2>Warden</h2>
+
+            <div id="student-info-page" class="page-view">
+                <div class="student-info-grid">
+                    <div class="sinfo-header">
+                        <div>
+                            <h2>Student Directory</h2>
+                            <p class="sinfo-sub" id="sinfo-count-meta">Syncing student profiles...</p>
+                        </div>
+                    </div>
+
+                    <div class="sinfo-toolbar">
+                        <input type="text" id="sinfo-search" class="pay-search-input"
+                            placeholder="Search Name, Roll No, Room, Branch, Phone...">
+                        <select id="sinfo-hostel-filter" class="att-input">
+                            <option value="ALL">All Hostels</option>
+                        </select>
+                    </div>
+
+                    <div class="sinfo-cards-grid" id="sinfo-cards-grid">
+                        <p class="sinfo-empty">Loading student records...</p>
+                    </div>
                 </div>
             </div>
+
             <div id="report-page" class="page-view">
                 <div class="report-page-grid">
                     <h2>Report</h2>
+                    <h4>Explain bugs or any suggestion here</h4>
 
                     <form action="https://formspree.io/f/mvkavnwr" method="POST" class="contact-form">
                         <!-- Hidden input to keep all email subjects EXACTLY the same for easy searching -->
@@ -270,19 +427,19 @@
 
                         <!-- User Input -->
                         <div class="user-inp">
-                            <label for="name">Name</label>
-                            <input type="text" name="name" id="name" class="userInp" placeholder="Enter your Name"
+                            <label for="report-name">Name</label>
+                            <input type="text" name="name" id="report-name" class="userInp" placeholder="Enter your Name"
                                 required>
                         </div>
 
                         <div class="user-inp">
-                            <label for="email">Email</label>
-                            <input type="email" name="email" id="email" class="userInp" placeholder="Enter your Email"
+                            <label for="report-email">Email</label>
+                            <input type="email" name="email" id="report-email" class="userInp" placeholder="Enter your Email"
                                 required>
                         </div>
 
                         <div class="user-inp">
-                            <label for="userMss">Enter your message</label>
+                            <label for="userMessage">Enter your message</label>
                             <textarea id="userMessage" name="message" rows="10" required
                                 placeholder="How can we help you?"></textarea>
                         </div>
@@ -326,6 +483,7 @@
 
         </div>
     </main>
+    <script src="payments.js"></script>
     <script src="script.js"></script>
 </body>
 

@@ -1,0 +1,572 @@
+/* ==================== FEE & PAYMENT LEDGER UI ==================== */
+.pay-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.pay-subtitle {
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.pay-refresh-btn {
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--side-hover-border);
+    background-color: var(--side-hover);
+    color: var(--accent-green);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.pay-refresh-btn:hover {
+    transform: translateY(-2px);
+    background-color: var(--accent-green);
+    color: #090b10;
+}
+
+/* KPI Grid */
+.pay-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.pay-kpi-card {
+    position: relative;
+    background-color: var(--grid-boxes);
+    border: 1px solid var(--grid-border);
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    overflow: hidden;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pay-kpi-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--kpi-accent, var(--accent-blue));
+}
+
+.pay-kpi-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--kpi-accent, var(--accent-blue));
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+}
+
+.pay-kpi-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.pay-kpi-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.pay-kpi-sub {
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.pay-progress-track {
+    width: 100%;
+    height: 5px;
+    border-radius: 999px;
+    background-color: var(--bg-panel);
+    overflow: hidden;
+    margin-top: 2px;
+}
+
+.pay-progress-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: var(--kpi-accent, var(--accent-green));
+    transition: width 0.4s ease;
+}
+
+/* Toolbar */
+.pay-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.pay-search-input {
+    flex: 1;
+    min-width: 190px;
+    height: 36px;
+    padding: 0 14px;
+    border-radius: 50px;
+    border: 1.5px solid var(--grid-border);
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.pay-search-input:focus {
+    border-color: var(--accent-green);
+}
+
+.pay-status-filters {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.pay-filter-pill {
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--grid-border);
+    background-color: var(--grid-boxes);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.pay-filter-pill:hover,
+.pay-filter-pill.active {
+    background-color: var(--accent-blue);
+    border-color: var(--accent-blue);
+    color: #ffffff;
+}
+
+/* Roster Table */
+.pay-table-wrap {
+    background-color: var(--grid-boxes);
+    border: 1px solid var(--grid-border);
+    border-radius: 10px;
+    padding: 10px;
+    overflow-x: auto;
+}
+
+.pay-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.pay-table th,
+.pay-table td {
+    text-align: left;
+    padding: 10px 8px;
+    border-bottom: 1px solid var(--grid-border);
+}
+
+.pay-table th {
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.pay-table tbody tr:hover {
+    background-color: var(--side-hover);
+}
+
+.pay-student-meta {
+    display: block;
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+.pay-money-due {
+    font-weight: 700;
+    color: var(--error-crimson);
+}
+
+.pay-money-clear {
+    font-weight: 700;
+    color: var(--accent-green);
+}
+
+.pay-badge {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: capitalize;
+    display: inline-block;
+}
+
+.pay-badge.paid    { background: #14b8a626; color: var(--accent-green); }
+.pay-badge.partial { background: #fbbf2426; color: var(--warning-amber); }
+.pay-badge.unpaid  { background: #f43f5e26; color: var(--error-crimson); }
+
+.pay-action-group {
+    display: flex;
+    gap: 6px;
+}
+
+.pay-action-btn {
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--grid-border);
+    background-color: var(--bg-panel);
+    color: var(--text-primary);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.15s ease;
+}
+
+.pay-action-btn.collect {
+    border-color: var(--accent-green);
+    color: var(--accent-green);
+}
+
+.pay-action-btn.collect:hover:not(:disabled) {
+    background-color: var(--accent-green);
+    color: #090b10;
+}
+
+.pay-action-btn.history:hover {
+    border-color: var(--accent-purple);
+    color: var(--accent-purple);
+}
+
+.pay-action-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+/* Modals */
+.pay-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 8, 15, 0.72);
+    backdrop-filter: blur(5px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    padding: 16px;
+}
+
+.pay-modal-overlay.open {
+    display: flex;
+}
+
+.pay-modal-card {
+    width: 100%;
+    max-width: 460px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background-color: var(--bg-panel);
+    border: 1px solid var(--grid-border);
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+}
+
+.pay-modal-wide {
+    max-width: 580px;
+}
+
+.pay-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--grid-border);
+    margin-bottom: 16px;
+}
+
+.pay-modal-sub {
+    font-size: 12px;
+    color: var(--accent-green);
+    margin-top: 3px;
+}
+
+.pay-modal-close {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.pay-modal-close:hover {
+    color: var(--error-crimson);
+}
+
+.pay-modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.pay-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+}
+
+.pay-field label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.pay-field-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pay-field-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.pay-quick-btns {
+    display: flex;
+    gap: 6px;
+}
+
+.pay-chip-btn {
+    padding: 2px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--accent-blue);
+    background: transparent;
+    color: var(--accent-blue);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.pay-chip-btn:hover {
+    background: var(--accent-blue);
+    color: #ffffff;
+}
+
+.pay-input {
+    width: 100%;
+    height: 40px;
+    padding: 0 12px;
+    border-radius: 8px;
+    border: 1px solid var(--grid-border);
+    background-color: var(--grid-boxes);
+    color: var(--text-primary);
+    font-size: 13px;
+    outline: none;
+}
+
+.pay-input:focus {
+    border-color: var(--accent-blue);
+}
+
+.pay-form-msg {
+    font-size: 12px;
+    font-weight: 600;
+    min-height: 16px;
+}
+
+.pay-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.pay-btn-ghost {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--grid-border);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.pay-btn-primary {
+    padding: 8px 18px;
+    border-radius: 8px;
+    border: none;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.pay-btn-primary:hover:not(:disabled) {
+    transform: translateY(-1px);
+}
+
+.pay-btn-primary:disabled {
+    opacity: 0.5;
+    cursor: wait;
+}
+
+/* Ledger History List */
+.pay-ledger-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.pay-ledger-box {
+    background-color: var(--grid-boxes);
+    border: 1px solid var(--grid-border);
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+}
+
+.pay-ledger-box span {
+    display: block;
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.pay-ledger-box strong {
+    font-size: 16px;
+    margin-top: 4px;
+    display: block;
+}
+
+.pay-ledger-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pay-receipt-item {
+    background-color: var(--grid-boxes);
+    border: 1px solid var(--grid-border);
+    border-left: 3px solid var(--accent-green);
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.pay-receipt-left p {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.pay-receipt-meta {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 3px;
+}
+
+.pay-receipt-right {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+}
+
+.pay-receipt-amt {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent-green);
+}
+
+/* Mobile Responsive Card Conversion (Matches Attendance Table UX) */
+@media screen and (max-width: 680px) {
+    .pay-table-wrap {
+        padding: 0;
+        background: transparent;
+        border: none;
+    }
+
+    .pay-table,
+    .pay-table tbody {
+        display: block;
+        width: 100%;
+    }
+
+    .pay-table thead {
+        display: none;
+    }
+
+    .pay-table tr {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        background-color: var(--grid-boxes);
+        border: 1px solid var(--grid-border);
+        border-radius: 10px;
+        padding: 12px;
+        margin-bottom: 10px;
+    }
+
+    .pay-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 4px 0;
+        border-bottom: 1px solid var(--grid-border);
+        text-align: right;
+    }
+
+    .pay-table td:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .pay-table td::before {
+        font-weight: 600;
+        color: var(--text-secondary);
+        font-size: 12px;
+        text-align: left;
+    }
+
+    .pay-table td:nth-of-type(1)::before { content: "Roll No"; }
+    .pay-table td:nth-of-type(2)::before { content: "Student"; }
+    .pay-table td:nth-of-type(3)::before { content: "Total Fee"; }
+    .pay-table td:nth-of-type(4)::before { content: "Paid"; }
+    .pay-table td:nth-of-type(5)::before { content: "Pending Due"; }
+    .pay-table td:nth-of-type(6)::before { content: "Status"; }
+    .pay-table td:nth-of-type(7)::before { content: "Actions"; }
+
+    .pay-table td[colspan] {
+        justify-content: center;
+        border-bottom: none;
+    }
+
+    .pay-table td[colspan]::before {
+        display: none;
+    }
+}

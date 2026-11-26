@@ -1,0 +1,144 @@
+/* ==================== STUDENT INFORMATION DIRECTORY ==================== */
+.student-info-grid {
+    grid-area: main;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    background-color: var(--bg-panel);
+    padding: 20px;
+    margin: 10px;
+    border-radius: 10px;
+    overflow: auto;
+}
+
+.sinfo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.sinfo-sub {
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--accent-green);
+    font-weight: 600;
+}
+
+.sinfo-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.sinfo-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 14px;
+}
+
+.sinfo-card {
+    background-color: var(--grid-boxes);
+    border: 1px solid var(--grid-border);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sinfo-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent-blue);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
+}
+
+.sinfo-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--grid-border);
+}
+
+.sinfo-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.sinfo-roll {
+    display: inline-block;
+    margin-top: 3px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent-blue);
+}
+
+.sinfo-branch-pill {
+    padding: 4px 10px;
+    border-radius: 999px;
+    background-color: var(--side-hover);
+    border: 1px solid var(--side-hover-border);
+    color: var(--accent-green);
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.sinfo-details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.sinfo-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.sinfo-item.full-row {
+    grid-column: 1 / -1;
+}
+
+.sinfo-label {
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.sinfo-val {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    word-break: break-word;
+    text-decoration: none;
+}
+
+a.sinfo-val:hover {
+    color: var(--accent-blue);
+    text-decoration: underline;
+}
+
+.sinfo-empty {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+@media screen and (max-width: 810px) {
+    .student-info-grid {
+        height: calc(100vh - 90px);
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .sinfo-cards-grid {
+        grid-template-columns: 1fr;
+    }
+}
