@@ -13,7 +13,7 @@ let savedTheme = localStorage.getItem("currentTheme");
 
 if (savedTheme === "enabled") {
     document.body.classList.add("light");
-    }
+}
 
 lightIcon.addEventListener("click", function () {
     document.body.classList.toggle("light");
@@ -327,10 +327,10 @@ function filterAttendanceTable() {
 document.querySelector(".studentSearch")?.addEventListener("input", filterAttendanceTable);
 const studentSearch = document.querySelector(".studentSearch")
 
-studentSearch.addEventListener("focus", ()=>{
+studentSearch.addEventListener("focus", () => {
     studentSearch.classList.add("active");
 });
-studentSearch.addEventListener("blur", ()=>{
+studentSearch.addEventListener("blur", () => {
     studentSearch.classList.remove("active");
 });
 
@@ -341,10 +341,10 @@ document.querySelectorAll(".userInp").forEach(inp => {
 
 
 const userMessage = document.getElementById("userMessage");
-userMessage.addEventListener("focus", ()=>{
+userMessage.addEventListener("focus", () => {
     userMessage.classList.add("active");
 });
-userMessage.addEventListener("blur", ()=>{
+userMessage.addEventListener("blur", () => {
     userMessage.classList.remove("active");
 });
 
@@ -621,7 +621,7 @@ document.querySelector('[data-target="dashboard-page"]')?.addEventListener("clic
 
 const hamburger = document.querySelector(".bi-mortarboard-fill");
 const sidebar = document.querySelector(".sidebar");
-hamburger.addEventListener("click", ()=>{
+hamburger.addEventListener("click", () => {
     sidebar.classList.toggle("active");
 });
 
@@ -658,14 +658,26 @@ async function loadStudentDirectory() {
             return;
         }
 
-        grid.innerHTML = data.students.map(s => `
-            <div class="sinfo-card">
+        grid.innerHTML = data.students.map(s => {
+            const safeName = (s.name || "").replace(/'/g, "\\'");
+            return `
+            <div class="sinfo-card" data-student-roll="${s.roll_no}">
                 <div class="sinfo-card-top">
                     <div>
                         <div class="sinfo-name">${s.name}</div>
                         <span class="sinfo-roll">${s.roll_no}</span>
                     </div>
-                    <span class="sinfo-branch-pill">${s.branch || "N/A"}</span>
+                    <div class="sinfo-top-right">
+                        <span class="sinfo-branch-pill">${s.branch || "N/A"}</span>
+                        <button type="button" class="sinfo-delete-btn"
+                            title="Permanently Remove Student"
+                            onclick="deleteStudentProfile('${s.roll_no}', '${safeName}', this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="sinfo-details">
@@ -695,7 +707,8 @@ async function loadStudentDirectory() {
                     </div>
                 </div>
             </div>
-        `).join("");
+        `;
+        }).join("");
     } catch (err) {
         console.error("Student directory load error:", err);
         grid.innerHTML = `<p class="sinfo-empty" style="color: var(--error-crimson);">Failed to load student directory from FastAPI.</p>`;
@@ -709,3 +722,31 @@ document.getElementById("sinfo-search")?.addEventListener("input", () => {
 
 document.getElementById("sinfo-hostel-filter")?.addEventListener("change", loadStudentDirectory);
 document.querySelector('[data-target="student-info-page"]')?.addEventListener("click", loadStudentDirectory);
+
+async function deleteStudentProfile(rollNo, studentName, btn) {
+    const confirmed = window.confirm(
+        `Permanently delete ${studentName} (${rollNo})?\n\nThis will remove their profile, attendance, fee ledger, and free up their hostel room slot.`
+    );
+    if (!confirmed) return;
+
+    btn.disabled = true;
+
+    try {
+        const res = await fetch(`${STUDENT_API_BASE}/students/${encodeURIComponent(rollNo)}`, {
+            method: "DELETE"
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || "Failed to delete student");
+
+        // Sync every live view across the entire SPA immediately
+        await loadStudentDirectory();
+        if (typeof window.refreshDashboard === "function") window.refreshDashboard();
+        if (typeof window.refreshLiveStats === "function") window.refreshLiveStats();
+        if (typeof loadAttendanceRoster === "function") loadAttendanceRoster();
+        if (typeof loadPaymentOverview === "function") loadPaymentOverview();
+    } catch (err) {
+        console.error("Student delete error:", err);
+        alert(`Delete failed: ${err.message}`);
+        btn.disabled = false;
+    }
+}

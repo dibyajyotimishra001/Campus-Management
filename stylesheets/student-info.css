@@ -142,3 +142,35 @@ a.sinfo-val:hover {
         grid-template-columns: 1fr;
     }
 }
+.sinfo-top-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.sinfo-delete-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    border: 1px solid var(--grid-border);
+    background-color: var(--bg-panel);
+    color: var(--text-secondary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+
+.sinfo-delete-btn:hover:not(:disabled) {
+    background-color: var(--error-crimson);
+    border-color: var(--error-crimson);
+    color: #ffffff;
+    transform: scale(1.08);
+}
+
+.sinfo-delete-btn:disabled {
+    opacity: 0.45;
+    cursor: wait;
+}
