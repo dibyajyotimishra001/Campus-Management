@@ -1,7 +1,5 @@
-const remort_url = "https://campus-management-ebgw.onrender.com";
-const local_url = "http://127.0.0.1:8000";
 // ==================== PRODUCTION FEE & PAYMENT ENGINE ====================
-const PAYMENT_API_BASE = "remort_url/api/payments";
+const PAYMENT_API_BASE = `${remort_url}/api/payments`;
 
 let payCurrentStatus = "ALL";
 let payMetaInitialized = false;
