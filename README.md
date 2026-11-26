@@ -8,7 +8,7 @@ A full-stack, real-time campus and hostel operations platform built with **FastA
 
 Colleges and hostels typically manage student onboarding, room occupancy, daily roll-call attendance, and fee ledgers across disconnected files. This causes:
 
-* **Overbooked rooms** and stale occupancy counts when students leave.
+* **Overbooked rooms** and stale occupancy counts when students leave. (**IN FUTURE**)
 * **Fee discrepancies**, duplicate UTR/transaction entries, and accidental overpayments.
 * **Zero real-time visibility** into daily attendance trends or staff actions.
 
