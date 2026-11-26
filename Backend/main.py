@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel, Field
 from pymongo import ASCENDING, DESCENDING, ReturnDocument
+from payments import router as payment_router, ensure_payment_indexes
 load_dotenv()
 
 MONGO_URI = os.getenv("MONGO_URI")
@@ -29,6 +30,7 @@ async def lifespan(app: FastAPI):
             [("student_roll_no", ASCENDING), ("date", ASCENDING)],
             unique=True
         )
+        await ensure_payment_indexes()
     except Exception as e:
         print(f"Index initialization notice: {e}")
     yield
@@ -43,7 +45,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
+app.include_router(payment_router)
 
 class WardenAttendancePayload(BaseModel):
     student_roll_no: str
@@ -570,19 +572,98 @@ async def search_students_for_warden(
                 {"name": regex},
                 {"roll_no": regex},
                 {"room_id": regex},
-                {"branch": regex}
+                {"branch": regex},
+                {"email": regex},
+                {"phone": regex}
             ]
+
+        # Build hostel_id -> hostel_name lookup map
+        hostels = await db.hostels.find(
+            {}, {"_id": 0, "hostel_id": 1, "name": 1}
+        ).sort("hostel_id", ASCENDING).to_list(length=50)
+        hostel_map = {h["hostel_id"]: h["name"] for h in hostels}
 
         students = await db.students.find(
             query_filter,
-            {"_id": 0, "password_hash": 0}
+            {
+                "_id": 0,
+                "roll_no": 1,
+                "name": 1,
+                "email": 1,
+                "phone": 1,
+                "guardian_phone": 1,
+                "semester": 1,
+                "year": 1,
+                "branch": 1,
+                "hostel_id": 1,
+                "room_id": 1
+            }
         ).sort("created_at", DESCENDING).to_list(length=500)
 
-        return {"count": len(students), "students": students}
+        for s in students:
+            s["hostel_name"] = hostel_map.get(s.get("hostel_id"), s.get("hostel_id", "Unassigned"))
+
+        return {
+            "count": len(students),
+            "hostels": hostels,
+            "students": students
+        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@app.delete("/api/students/{roll_no}")
+async def delete_student_permanently(roll_no: str):
+    """Permanently removes a student, releases their hostel room slot, and purges orphan records."""
+    try:
+        clean_roll = roll_no.strip().upper()
+        student = await db.students.find_one({"roll_no": clean_roll})
+        if not student:
+            raise HTTPException(status_code=404, detail=f"Student {clean_roll} not found.")
+
+        student_name = student.get("name", clean_roll)
+        room_id = student.get("room_id")
+
+        # 1. Atomically release hostel room occupancy (guards against negative occupancy)
+        if room_id:
+            await db.rooms.update_one(
+                {
+                    "room_id": room_id,
+                    "occupants": clean_roll,
+                    "current_occupancy": {"$gt": 0}
+                },
+                {
+                    "$inc": {"current_occupancy": -1},
+                    "$pull": {"occupants": clean_roll},
+                    "$set": {"status": "available"}
+                }
+            )
+
+        # 2. Purge student document and all related records (zero orphan data)
+        await db.students.delete_one({"roll_no": clean_roll})
+        await db.attendance.delete_many({"student_roll_no": clean_roll})
+        await db.fee_transactions.delete_many({"student_roll_no": clean_roll})
+
+        # 3. Record immutable deletion event in audit_logs for Recent Activities
+        now_iso = datetime.now(IST).isoformat()
+        await db.audit_logs.insert_one({
+            "actor_id": "ADMIN",
+            "actor_role": "super_admin",
+            "action": "STUDENT_DELETED",
+            "target_roll_no": clean_roll,
+            "old_value": f"{student_name} ({room_id or 'No Room'})",
+            "new_value": "PERMANENTLY_REMOVED",
+            "timestamp": now_iso
+        })
+
+        return {
+            "message": f"{student_name} ({clean_roll}) permanently removed and room slot released.",
+            "roll_no": clean_roll
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 # ====================
 # -----Dashboard------
 # ====================
