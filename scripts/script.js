@@ -1,3 +1,7 @@
+const remort_url = "https://campus-management-ebgw.onrender.com";
+const local_url = "http://127.0.0.1:8000";
+
+
 const search = document.getElementById("search")
 
 search.addEventListener("focus", () => {
@@ -57,7 +61,7 @@ sidebarItems.forEach(item => {
     });
 });
 
-const STATS_API_BASE = "http://127.0.0.1:8000/api/stats/live";
+const STATS_API_BASE = "remort_url/api/stats/live";
 let currentStatsWindow = 7;
 
 async function loadLiveStats(days = currentStatsWindow) {
@@ -179,7 +183,7 @@ window.refreshLiveStats = () => loadLiveStats(currentStatsWindow);
 document.addEventListener("DOMContentLoaded", () => loadLiveStats(7));
 
 // ==================== WARDEN / ADMIN LIVE ATTENDANCE ENGINE ====================
-const ATT_API_BASE = "http://127.0.0.1:8000/api/attendance";
+const ATT_API_BASE = "remort_url/api/attendance";
 let attDropdownsInitialized = false;
 
 async function loadAttendanceRoster() {
@@ -349,7 +353,7 @@ userMessage.addEventListener("blur", () => {
 });
 
 // ==================== DYNAMIC STUDENT REGISTRATION ENGINE ====================
-const STUDENT_API_BASE = "http://127.0.0.1:8000/api";
+const STUDENT_API_BASE = "remort_url/api";
 
 let courseBranchesMap = {
     BTECH: ["CSE (AI/ML)", "CSE", "ECE", "Electrical", "Mechanical", "Civil"],
@@ -518,7 +522,7 @@ document.addEventListener("DOMContentLoaded", initStudentEntryMeta);
 document.querySelector('[data-target="student-page"]')?.addEventListener("click", initStudentEntryMeta);
 
 // ==================== DYNAMIC DASHBOARD ENGINE ====================
-const DASHBOARD_API_URL = "http://127.0.0.1:8000/api/dashboard";
+const DASHBOARD_API_URL = "remort_url/api/dashboard";
 
 function formatISTDateHeading(isoDateStr) {
     const parsedDate = isoDateStr ? new Date(`${isoDateStr}T00:00:00`) : new Date();
